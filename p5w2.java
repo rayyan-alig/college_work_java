@@ -16,16 +16,19 @@ public class p5w2{
         }
         System.out.println("Floyd's Triangle (Pattern 2):");
         for (int row = 1; row <=n; row++) {
-            for (int col = 1; col < row; col++) {
+            for (int col = 1; col <= row; col++) {
                 if(row%2 == 1 && col%2 == 1){
 			System.out.print("1 ");
 		} 
-		if(row%2 == 0 && col%2 == 0){
+		if(row%2 == 0 && col%2 == 1){
 			System.out.print("0 ");
 		}    
 		if(row%2 == 1 && col%2 == 0){
-			System.out.print("0");
-		}       
+			System.out.print("0 ");
+		}
+		if(row%2 == 0 && col%2 == 0){
+			System.out.print("1 ");
+		}        
 	    }
             System.out.println();
         }
