@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 public class p3w4 {
     public static void main(String[] args) {
@@ -20,31 +20,24 @@ public class p3w4 {
     }
 
     public static int countWords(String text) {
-        int count = 1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == ' ') {
-                count++;
-            }
-        }
-        return count;
+        StringTokenizer s = new StringTokenizer(text);
+        return s.countTokens();
     }
 
     public static int countSentences(String text) {
-        int count = 0;
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch == '.' || ch == '!' || ch == '?') {
-                count++;
-            }
-        }
-        return count;
+        StringTokenizer s = new StringTokenizer(text, ".!?");
+        return s.countTokens();
     }
 
     public static int countOccurrences(String text, char letter) {
         int count = 0;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == letter) {
-                count++;
+        StringTokenizer s = new StringTokenizer(text, " ");
+        while(s.hasMoreTokens()){
+            String token = s.nextToken();
+            for(char c : token.toCharArray()){
+                if(c == letter){
+                    count++;
+                }
             }
         }
         return count;
