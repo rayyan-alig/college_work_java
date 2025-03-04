@@ -2,7 +2,6 @@ package week7;
 import java.io.*;
 import java.util.*;
 
-// Custom exception for invalid data
 class InvalidDataException extends Exception {
     public InvalidDataException(String message) {
         super(message);
@@ -11,29 +10,29 @@ class InvalidDataException extends Exception {
 
 class DataProcessor {
     
-    // Method to read values from file
-    public List<Double> readValuesFromFile(String filePath) {
+    // Reads numeric values from a file, collecting invalid entries
+    public List<Double> readValuesFromFile(String filePath, List<String> invalidEntries) {
         List<Double> values = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 try {
-                    values.add(Double.parseDouble(line.trim()));
+                    values.add(Double.parseDouble(line.trim()));  // Parse number
                 } catch (NumberFormatException e) {
-                    throw new InvalidDataException("Invalid numeric data found: " + line);
+                    invalidEntries.add(line.trim());  // Store invalid data
                 }
             }
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + filePath);
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
-        } catch (InvalidDataException e) {
-            System.out.println("Data validation error: " + e.getMessage());
         }
+
         return values;
     }
-    
-    // Method to validate data
+
+    // Validates and returns only valid numbers
     public List<Double> validateData(List<Double> values) {
         List<Double> validValues = new ArrayList<>();
         for (Double value : values) {
@@ -43,8 +42,7 @@ class DataProcessor {
         }
         return validValues;
     }
-    
-    // Method to calculate the average
+
     public double calculateAverage(List<Double> validValues) {
         if (validValues.isEmpty()) return 0;
         double sum = 0;
@@ -53,8 +51,7 @@ class DataProcessor {
         }
         return sum / validValues.size();
     }
-    
-    // Method to write result to file
+
     public void writeResultToFile(double average, String outputPath) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath))) {
             bw.write("Average: " + average);
@@ -68,13 +65,18 @@ class DataProcessor {
 public class p1w7 {
     public static void main(String[] args) {
         DataProcessor processor = new DataProcessor();
-        String inputFilePath = "input.txt"; // Change to your file path
+        String inputFilePath = "input.txt"; 
         String outputFilePath = "output.txt";
-        
-        // Read, validate, calculate and write
-        List<Double> values = processor.readValuesFromFile(inputFilePath);
+        List<String> invalidEntries = new ArrayList<>();  // Stores invalid values
+
+        List<Double> values = processor.readValuesFromFile(inputFilePath, invalidEntries);
         List<Double> validValues = processor.validateData(values);
         double average = processor.calculateAverage(validValues);
         processor.writeResultToFile(average, outputFilePath);
+
+        // Throw error AFTER processing, without stopping execution
+        if (!invalidEntries.isEmpty()) {
+            System.out.println("Data validation error: Invalid numeric data found: " + invalidEntries);
+        }
     }
 }
